@@ -33,5 +33,18 @@
       <p>By <a href="https://www.freecodecamp.org/">freeCodeCamp.org</a></p>
     </div>
     <script src="/script.js"></script>
+    <script>
+      window.onload = function () {
+        fetch("https://timestamp-4ecv.onrender.com/api/")
+          .then((response) => response.json())
+          .then((data) => {
+            const currentDateElement = document.getElementById("current-date");
+            currentDateElement.textContent = data.utc;
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      };
+    </script>
   </body>
 </html>
