@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
+        console.error(
+          `Network response was not ok: ${response.status} ${response.statusText}`
+        );
         throw new Error("Network response was not ok");
       }
       return response.json();
