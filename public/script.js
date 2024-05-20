@@ -44,6 +44,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 // Initial fetch to populate the page with data from the default URL
-fetchData("https://localhost:3000/api/").then((data) => {
+fetchData("http://localhost:3000/api/").then((data) => {
   console.log("Data fetched successfully:", data);
 });
