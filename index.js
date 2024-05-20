@@ -30,7 +30,6 @@ app.get("/api/:date?", (req, res) => {
 
   // If no date is provided, use the current date
   if (!dateInput) {
-    console.log("No date input provided");
     const now = new Date();
     return res.json({ unix: now.getTime(), utc: now.toUTCString() });
   }
