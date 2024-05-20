@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const urlParams = new URLSearchParams(window.location.search);
-  const dateParam = urlParams.get("date");
+  const dateParam = urlParams.get("date") || ""; // Default to empty if no date provided
 
   // Construct the API URL based on the date parameter
-  const apiUrl = `http://localhost:3000/api/${dateParam}`;
+  const apiUrl = `/api/${dateParam}`;
 
   // Fetch data from the API
   fetch(apiUrl)
@@ -17,8 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
       // Update the HTML content with the received data
       document.getElementById("current-date").innerHTML =
         "Unix Timestamp: " + data.unix + "<br>UTC: " + data.utc;
-      console.log(data.unix);
-      console.log(data.utc);
     })
     .catch((error) => {
       console.error("Error:", error);
