@@ -1,19 +1,11 @@
 async function fetchData(url) {
   try {
     const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(
-        `Network response was not ok. Status: ${response.status} - ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
+    const data = await response.json(); // Move inside the try block
     return data;
   } catch (error) {
-    console.error("Fetch error:", error);
-    displayErrorMessage(
-      "An error occurred while fetching data. Please try again later."
-    );
+    console.error(error);
+    throw error; // Rethrow the error so that it can be caught by the caller
   }
 }
 
@@ -43,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-// Initial fetch to populate the page with data from the default URL
+// Initial fetch to populate the page with data from the local server
 fetchData("http://localhost:3000/api/").then((data) => {
   console.log("Data fetched successfully:", data);
 });
