@@ -6,22 +6,13 @@ const port = process.env.PORT || 3000;
 var cors = require("cors");
 app.use(cors({ optionsSuccessStatus: 200 }));
 
-app.use(express.static(path.join(__dirname, "public")));
-
+// Serve static files with correct MIME types
 app.use(
   express.static(path.join(__dirname, "public"), {
     setHeaders: (res, filePath) => {
       if (filePath.endsWith(".js")) {
         res.setHeader("Content-Type", "application/javascript");
-      }
-    },
-  })
-);
-
-app.use(
-  express.static(path.join(__dirname, "public"), {
-    setHeaders: (res, filePath) => {
-      if (filePath.endsWith(".css")) {
+      } else if (filePath.endsWith(".css")) {
         res.setHeader("Content-Type", "text/css");
       }
     },
