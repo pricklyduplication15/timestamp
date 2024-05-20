@@ -9,6 +9,10 @@ async function fetchData(url) {
   }
 }
 
+fetchData("http://localhost:3000/api/").then((data) => {
+  console.log("Data fetched successfully:", data);
+});
+
 function displayErrorMessage(message) {
   const errorElement = document.getElementById("error-message");
   if (errorElement) {
@@ -33,9 +37,4 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (error) {
     console.error("Error:", error);
   }
-});
-
-// Initial fetch to populate the page with data from the local server
-fetchData("http://localhost:3000/api/").then((data) => {
-  console.log("Data fetched successfully:", data);
 });
