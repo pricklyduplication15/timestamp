@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 const path = require("path");
-const port = 3001;
+const port = process.env.PORT || 3000;
 
 var cors = require("cors");
 app.use(cors({ optionsSuccessStatus: 200 }));
@@ -9,7 +9,7 @@ app.use(cors({ optionsSuccessStatus: 200 }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/views/index.html");
+  res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 app.get("/api/:date?", (req, res) => {
@@ -17,17 +17,25 @@ app.get("/api/:date?", (req, res) => {
 
   let dateInput = req.params.date;
 
+  // If no date is provided, use the current date
   if (!dateInput) {
     console.log("No date input provided");
-    return res.json({ unix: Date.now() });
+    const now = new Date();
+    return res.json({ unix: now.getTime(), utc: now.toUTCString() });
   }
 
+  // Check if the input is a valid Unix timestamp in milliseconds or seconds
   if (!isNaN(dateInput)) {
     dateInput = parseInt(dateInput, 10);
+    if (dateInput.toString().length === 10) {
+      // Convert Unix timestamp in seconds to milliseconds
+      dateInput *= 1000;
+    }
   }
 
   const parsedDate = new Date(dateInput);
 
+  // Check for invalid dates
   if (isNaN(parsedDate.getTime())) {
     console.log("Invalid date input");
     return res.status(400).json({ error: "Invalid date" });
@@ -35,8 +43,7 @@ app.get("/api/:date?", (req, res) => {
 
   console.log("Valid date input:", parsedDate);
 
-  const utcFormattedDate = parsedDate.toUTCString();
-  res.json({ unix: parsedDate.getTime(), utc: utcFormattedDate });
+  res.json({ unix: parsedDate.getTime(), utc: parsedDate.toUTCString() });
 });
 
 app.listen(port, () => {
