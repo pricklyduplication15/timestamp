@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-  fetch("http://localhost:3001/api/date")
+  const urlParams = new URLSearchParams(window.location.search);
+  const dateParam = urlParams.get("date");
+
+  const apiUrl = `https://localhost:3000/api/${dateParam}`;
+
+  fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
