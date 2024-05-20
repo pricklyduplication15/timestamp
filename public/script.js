@@ -1,3 +1,5 @@
+const url = "http://localhost:3000";
+
 async function fetchData(url) {
   try {
     const response = await fetch(url);
@@ -9,7 +11,7 @@ async function fetchData(url) {
   }
 }
 
-fetchData("http://localhost:3000/api/").then((data) => {
+fetchData(url).then((data) => {
   console.log("Data fetched successfully:", data);
 });
 
