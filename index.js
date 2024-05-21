@@ -7,7 +7,7 @@ var cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://timestamp-4ecv.onrender.com",
+    origin: "https://timestamp-api-zetg.onrender.com/",
     method: "GET",
     optionsSuccessStatus: 200,
   })

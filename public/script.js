@@ -1,7 +1,4 @@
-const isLocalhost = window.location.hostname === "localhost";
-const baseURL = isLocalhost
-  ? "http://localhost:3000/api"
-  : "https://timestamp-4ecv.onrender.com/api";
+const baseURL = "https://timestamp-api-zetg.onrender.com/api";
 
 async function fetchData(url) {
   try {
@@ -36,26 +33,6 @@ function updateURLParameter(param, value) {
   window.history.pushState({}, "", url);
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  const dateParam = urlParams.get("date") || "";
-  const apiUrl = dateParam ? `${baseURL}/${dateParam}` : `${baseURL}/`;
-
-  try {
-    const data = await fetchData(apiUrl);
-    if (data) {
-      document.getElementById("current-date").innerHTML =
-        "Unix Timestamp: " + data.unix + "<br>UTC: " + data.utc;
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    displayErrorMessage(
-      "An error occurred while fetching data. Please try again later."
-    );
-  }
-});
-
-// Example: Update URL with a new date parameter and fetch new data
 function updateDateParam(newDate) {
   const dateParam = isNaN(newDate)
     ? newDate
@@ -76,4 +53,38 @@ function updateDateParam(newDate) {
     });
 }
 
-// Call `updateDateParam` with desired date (in UTC or Unix format) to update the data
+document.addEventListener("DOMContentLoaded", async function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const dateParam = urlParams.get("date") || "";
+  const apiUrl = dateParam ? `${baseURL}/${dateParam}` : `${baseURL}/`;
+
+  try {
+    const data = await fetchData(apiUrl);
+    if (data) {
+      document.getElementById("current-date").innerHTML =
+        "Unix Timestamp: " + data.unix + "<br>UTC: " + data.utc;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    displayErrorMessage(
+      "An error occurred while fetching data. Please try again later."
+    );
+  }
+});
+
+document.getElementById("update-button").addEventListener("click", () => {
+  const dateInput = document.getElementById("date-input").value;
+  updateDateParam(dateInput);
+});
+
+// Initial fetch to populate the page with data from the server
+fetchData(baseURL)
+  .then((data) => {
+    console.log("Data fetched successfully:", data);
+  })
+  .catch((error) => {
+    console.error("Fetch error:", error);
+    displayErrorMessage(
+      "An error occurred while fetching data. Please try again later."
+    );
+  });
