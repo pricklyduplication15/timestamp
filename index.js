@@ -4,6 +4,7 @@ const path = require("path");
 const port = process.env.PORT || 3000;
 
 var cors = require("cors");
+app.use(express.json());
 
 app.use(
   cors({
@@ -31,19 +32,27 @@ app.get("/", function (req, res) {
 });
 
 app.get("/api/:date?", (req, res) => {
-  const dateParam = req.params.date;
-  if (dateParam) {
-    // Handle specific date
-    res.json({
-      unix: new Date(dateParam).getTime(),
-      utc: new Date(dateParam).toUTCString(),
-    });
+  const { date } = req.params;
+
+  // Check if date parameter is provided
+  if (date) {
+    // Check if date is in UTC format
+    if (!isNaN(Date.parse(date))) {
+      const utcDate = new Date(date).toUTCString();
+      res.json({ unix: Date.parse(utcDate), utc: utcDate });
+    } else {
+      // Check if date is in Unix format
+      const unixDate = new Date(parseInt(date));
+      if (!isNaN(unixDate.getTime())) {
+        res.json({ unix: parseInt(date), utc: unixDate.toUTCString() });
+      } else {
+        res.status(400).json({ error: "Invalid date format" });
+      }
+    }
   } else {
-    // Handle current date
-    res.json({
-      unix: Date.now(),
-      utc: new Date().toUTCString(),
-    });
+    // If no date parameter provided, return current UTC time
+    const utcNow = new Date().toUTCString();
+    res.json({ unix: Date.now(), utc: utcNow });
   }
 });
 
