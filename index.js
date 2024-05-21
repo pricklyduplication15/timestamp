@@ -1,5 +1,5 @@
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
 const path = require("path");
 const port = process.env.PORT || 3000;
 
@@ -27,6 +27,11 @@ app.use(
   })
 );
 
+// Serve the index.html file from the "views" folder as the root path
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
 app.get("/api/:date?", (req, res) => {
   const { date } = req.params;
 
@@ -45,27 +50,6 @@ app.get("/api/:date?", (req, res) => {
   // Handle valid date string
   const unixTimestamp = dateObject.getTime(); // in milliseconds
   res.json({ unix: unixTimestamp, utc: dateObject.toUTCString() });
-});
-
-// Endpoint to handle both UTC and Unix timestamps
-app.get("/api/:date?", (req, res) => {
-  const { date } = req.params;
-
-  // If no date parameter provided, return the current time
-  if (!date) {
-    const now = new Date();
-    return res.json({ unix: now.getTime(), utc: now.toUTCString() });
-  }
-
-  // Check if the provided date string is a valid date
-  const dateObject = new Date(date);
-  if (isNaN(dateObject.getTime())) {
-    return res.status(400).json({ error: "Invalid Date" });
-  }
-
-  // Handle valid date string
-  const utcDate = dateObject.toUTCString();
-  res.json({ unix: dateObject.getTime(), utc: utcDate });
 });
 
 app.listen(port, () => {
