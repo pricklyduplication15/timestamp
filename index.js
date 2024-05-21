@@ -6,13 +6,6 @@ var cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://timestamp-api-zetg.onrender.com",
-    method: "GET",
-  })
-);
-
-app.use(
-  cors({
     optionsSuccessStatus: 200,
   })
 );
