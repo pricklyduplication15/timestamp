@@ -27,13 +27,7 @@ app.use(
   })
 );
 
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "views", "index.html"));
-});
-
-
-// Endpoint to handle both UTC and Unix timestamps
-app.get('/api/:date?', (req, res) => {
+app.get("/api/:date?", (req, res) => {
   const { date } = req.params;
 
   // If no date parameter provided, return the current time
@@ -45,7 +39,28 @@ app.get('/api/:date?', (req, res) => {
   // Check if the provided date string is a valid date
   const dateObject = new Date(date);
   if (isNaN(dateObject.getTime())) {
-    return res.status(400).json({ error: 'Invalid Date' });
+    return res.status(400).json({ error: "Invalid Date" });
+  }
+
+  // Handle valid date string
+  const unixTimestamp = dateObject.getTime(); // in milliseconds
+  res.json({ unix: unixTimestamp, utc: dateObject.toUTCString() });
+});
+
+// Endpoint to handle both UTC and Unix timestamps
+app.get("/api/:date?", (req, res) => {
+  const { date } = req.params;
+
+  // If no date parameter provided, return the current time
+  if (!date) {
+    const now = new Date();
+    return res.json({ unix: now.getTime(), utc: now.toUTCString() });
+  }
+
+  // Check if the provided date string is a valid date
+  const dateObject = new Date(date);
+  if (isNaN(dateObject.getTime())) {
+    return res.status(400).json({ error: "Invalid Date" });
   }
 
   // Handle valid date string
