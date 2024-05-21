@@ -1,3 +1,8 @@
+const isLocalhost = window.location.hostname === "localhost";
+const baseURL = isLocalhost
+  ? "http://localhost:3000/api"
+  : "https://timestamp-4ecv.onrender.com/api";
+
 async function fetchData(url) {
   try {
     const response = await fetch(url);
@@ -29,9 +34,7 @@ function displayErrorMessage(message) {
 document.addEventListener("DOMContentLoaded", async function () {
   const urlParams = new URLSearchParams(window.location.search);
   const dateParam = urlParams.get("date") || ""; // Default to empty if no date provided
-  const apiUrl = dateParam
-    ? `http://localhost:3000/api/${dateParam}`
-    : "http://localhost:3000/api/";
+  const apiUrl = dateParam ? `${baseURL}/${dateParam}` : `${baseURL}/`;
 
   try {
     const data = await fetchData(apiUrl);
@@ -47,8 +50,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-// Initial fetch to populate the page with data from the local server
-fetchData("http://localhost:3000/api/")
+// Initial fetch to populate the page with data from the local server or remote server
+fetchData(baseURL)
   .then((data) => {
     console.log("Data fetched successfully:", data);
   })

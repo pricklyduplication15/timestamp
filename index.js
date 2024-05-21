@@ -5,6 +5,11 @@ const port = process.env.PORT || 3000;
 
 var cors = require("cors");
 app.use(cors({ optionsSuccessStatus: 200 }));
+app.use(
+  cors({
+    origin: "https://timestamp-4ecv.onrender.com",
+  })
+);
 
 // Serve static files from the "public" directory with correct MIME types
 app.use(
