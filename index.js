@@ -35,10 +35,30 @@ app.get("/", (req, res) => {
 app.get("/api/:date?", (req, res) => {
   const { date } = req.params;
 
+  // Function to check if input is a valid Unix timestamp
+  const isValidUnixTimestamp = (input) => {
+    return /^\d+$/.test(input);
+  };
+
+  // Function to convert Unix timestamp to UTC string
+  const convertUnixToUTC = (unixTimestamp) => {
+    const dateObject = new Date(parseInt(unixTimestamp));
+    return dateObject.toUTCString();
+  };
+
   // If no date parameter provided, return the current time
   if (!date) {
     const now = new Date();
     return res.json({ unix: now.getTime(), utc: now.toUTCString() });
+  }
+
+  // Check if the provided date is a valid Unix timestamp
+  if (isValidUnixTimestamp(date)) {
+    const unixTimestamp = parseInt(date); // Convert to number
+    return res.json({
+      unix: unixTimestamp,
+      utc: convertUnixToUTC(unixTimestamp),
+    });
   }
 
   // Check if the provided date string is a valid date
