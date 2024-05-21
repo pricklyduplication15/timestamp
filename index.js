@@ -29,36 +29,20 @@ app.get("/", function (req, res) {
 });
 
 app.get("/api/:date?", (req, res) => {
-  console.log("Received request:", req.params.date);
-
-  let dateInput = req.params.date;
-
-  // If no date is provided, use the current date
-  if (!dateInput) {
-    const now = new Date();
-    return res.json({ unix: now.getTime(), utc: now.toUTCString() });
+  const dateParam = req.params.date;
+  if (dateParam) {
+    // Handle specific date
+    res.json({
+      unix: new Date(dateParam).getTime(),
+      utc: new Date(dateParam).toUTCString(),
+    });
+  } else {
+    // Handle current date
+    res.json({
+      unix: Date.now(),
+      utc: new Date().toUTCString(),
+    });
   }
-
-  // Check if the input is a valid Unix timestamp in milliseconds or seconds
-  if (!isNaN(dateInput)) {
-    dateInput = parseInt(dateInput, 10);
-    if (dateInput.toString().length === 10) {
-      // Convert Unix timestamp in seconds to milliseconds
-      dateInput *= 1000;
-    }
-  }
-
-  const parsedDate = new Date(dateInput);
-
-  // Check for invalid dates
-  if (isNaN(parsedDate.getTime())) {
-    console.log("Invalid date input");
-    return res.status(400).json({ error: "Invalid date" });
-  }
-
-  console.log("Valid date input:", parsedDate);
-
-  res.json({ unix: parsedDate.getTime(), utc: parsedDate.toUTCString() });
 });
 
 app.listen(port, () => {

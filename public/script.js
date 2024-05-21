@@ -7,9 +7,8 @@ async function fetchData(url) {
   try {
     const response = await fetch(url);
 
-    // Check if the response is OK (status in the range 200-299)
     if (!response.ok) {
-      const errorMessage = await response.text(); // Read the response body as text
+      const errorMessage = await response.text();
       throw new Error(`Error: ${response.status} - ${errorMessage}`);
     }
 
@@ -17,7 +16,7 @@ async function fetchData(url) {
     return data;
   } catch (error) {
     console.error(error);
-    throw error; // Rethrow the error so that it can be caught by the caller
+    throw error;
   }
 }
 
@@ -33,7 +32,7 @@ function displayErrorMessage(message) {
 
 document.addEventListener("DOMContentLoaded", async function () {
   const urlParams = new URLSearchParams(window.location.search);
-  const dateParam = urlParams.get("date") || ""; // Default to empty if no date provided
+  const dateParam = urlParams.get("date") || "";
   const apiUrl = dateParam ? `${baseURL}/${dateParam}` : `${baseURL}/`;
 
   try {
@@ -50,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-// Initial fetch to populate the page with data from the local server or remote server
+// Initial fetch to populate the page with data from the server
 fetchData(baseURL)
   .then((data) => {
     console.log("Data fetched successfully:", data);
