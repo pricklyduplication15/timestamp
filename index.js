@@ -15,6 +15,10 @@ app.use(
 // Serve static files from the "public" directory with correct MIME types
 app.use(express.static("public"));
 
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/views/index.html");
+});
+
 const isInvalidDate = (date) => date.toUTCString() === "Invalid Date";
 
 app.get("/api", (req, res) => {
@@ -39,10 +43,6 @@ app.get("/api/:date?", (req, res) => {
     unix: date.getTime(),
     utc: date.toUTCString(),
   });
-});
-
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/views/index.html");
 });
 
 app.listen(port, () => {
