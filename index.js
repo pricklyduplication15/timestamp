@@ -4,10 +4,12 @@ const path = require("path");
 const port = process.env.PORT || 3000;
 
 var cors = require("cors");
-app.use(cors({ optionsSuccessStatus: 200 }));
+
 app.use(
   cors({
     origin: "https://timestamp-4ecv.onrender.com",
+    method: "GET",
+    optionsSuccessStatus: 200,
   })
 );
 

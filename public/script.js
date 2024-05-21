@@ -30,6 +30,12 @@ function displayErrorMessage(message) {
   }
 }
 
+function updateURLParameter(param, value) {
+  const url = new URL(window.location);
+  url.searchParams.set(param, value);
+  window.history.pushState({}, "", url);
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
   const urlParams = new URLSearchParams(window.location.search);
   const dateParam = urlParams.get("date") || "";
@@ -49,14 +55,25 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-// Initial fetch to populate the page with data from the server
-fetchData(baseURL)
-  .then((data) => {
-    console.log("Data fetched successfully:", data);
-  })
-  .catch((error) => {
-    console.error("Fetch error:", error);
-    displayErrorMessage(
-      "An error occurred while fetching data. Please try again later."
-    );
-  });
+// Example: Update URL with a new date parameter and fetch new data
+function updateDateParam(newDate) {
+  const dateParam = isNaN(newDate)
+    ? newDate
+    : new Date(parseInt(newDate)).toISOString();
+  updateURLParameter("date", dateParam);
+
+  const apiUrl = `${baseURL}/${dateParam}`;
+  fetchData(apiUrl)
+    .then((data) => {
+      document.getElementById("current-date").innerHTML =
+        "Unix Timestamp: " + data.unix + "<br>UTC: " + data.utc;
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+      displayErrorMessage(
+        "An error occurred while fetching data. Please try again later."
+      );
+    });
+}
+
+// Call `updateDateParam` with desired date (in UTC or Unix format) to update the data
