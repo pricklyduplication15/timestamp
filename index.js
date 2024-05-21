@@ -31,29 +31,26 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-app.get("/api/:date?", (req, res) => {
+
+// Endpoint to handle both UTC and Unix timestamps
+app.get('/api/:date?', (req, res) => {
   const { date } = req.params;
 
-  // Check if date parameter is provided
-  if (date) {
-    // Check if date is in UTC format
-    if (!isNaN(Date.parse(date))) {
-      const utcDate = new Date(date).toUTCString();
-      res.json({ unix: Date.parse(utcDate), utc: utcDate });
-    } else {
-      // Check if date is in Unix format
-      const unixDate = new Date(parseInt(date));
-      if (!isNaN(unixDate.getTime())) {
-        res.json({ unix: parseInt(date), utc: unixDate.toUTCString() });
-      } else {
-        res.status(400).json({ error: "Invalid date format" });
-      }
-    }
-  } else {
-    // If no date parameter provided, return current UTC time
-    const utcNow = new Date().toUTCString();
-    res.json({ unix: Date.now(), utc: utcNow });
+  // If no date parameter provided, return the current time
+  if (!date) {
+    const now = new Date();
+    return res.json({ unix: now.getTime(), utc: now.toUTCString() });
   }
+
+  // Check if the provided date string is a valid date
+  const dateObject = new Date(date);
+  if (isNaN(dateObject.getTime())) {
+    return res.status(400).json({ error: 'Invalid Date' });
+  }
+
+  // Handle valid date string
+  const utcDate = dateObject.toUTCString();
+  res.json({ unix: dateObject.getTime(), utc: utcDate });
 });
 
 app.listen(port, () => {
