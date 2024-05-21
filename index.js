@@ -69,7 +69,10 @@ app.get("/api/:date?", (req, res) => {
 
   // Handle valid date string
   const unixTimestamp = dateObject.getTime(); // in milliseconds
-  res.json({ unix: unixTimestamp, utc: dateObject.toUTCString() });
+  res.json({
+    unix: " " + unixTimestamp,
+    utc: " " + dateObject.toUTCString(),
+  });
 });
 
 app.listen(port, () => {

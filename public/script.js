@@ -72,11 +72,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-document.getElementById("update-button").addEventListener("click", () => {
-  const dateInput = document.getElementById("date-input").value;
-  updateDateParam(dateInput);
-});
-
 // Initial fetch to populate the page with data from the server
 fetchData(baseURL)
   .then((data) => {
