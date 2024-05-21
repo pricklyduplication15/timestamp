@@ -32,6 +32,13 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
+app.get("/api", (req, res) => {
+  res.json({
+    unix: new Date().getTime(),
+    utc: new Date().toUTCString(),
+  });
+});
+
 app.get("/api/:date?", (req, res) => {
   const { date } = req.params;
 
@@ -45,12 +52,6 @@ app.get("/api/:date?", (req, res) => {
     const dateObject = new Date(parseInt(unixTimestamp));
     return dateObject.toUTCString();
   };
-
-  // If no date parameter provided, return the current time
-  if (!date) {
-    const now = new Date();
-    return res.json({ unix: now.getTime(), utc: now.toUTCString() });
-  }
 
   // Check if the provided date is a valid Unix timestamp
   if (isValidUnixTimestamp(date)) {
@@ -70,8 +71,8 @@ app.get("/api/:date?", (req, res) => {
   // Handle valid date string
   const unixTimestamp = dateObject.getTime(); // in milliseconds
   res.json({
-    unix: " " + unixTimestamp,
-    utc: " " + dateObject.toUTCString(),
+    unix: unixTimestamp,
+    utc: dateObject.toUTCString(),
   });
 });
 
